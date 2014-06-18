@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+	Ejercicio 1
+{% endblock titulo %}
+
+{% block content %}
+
+{% if process %}
+    Esta procesando <img src="{{ STATIC_URL }}ima/loading.gif">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+        function execute_script (time) {
+            setTimeout(function(){status_process()}, time);
+        }
+
+        function status_process() {
+            var jqxhr = $.post( "/statusprocess/{{ process.id }}/", function(response) {
+                var response = $.parseJSON(response);
+                // El proceso ha finalizado
+                if(response.successful==1){
+
+                } else {
+                    // El proceso no ha finalizado
+                    time_wait = response.remaining_time * 1000;
+                    return execute_script(time_wait);
+                }
+            })
+            .done(function() {
+                //alert( "second success" );
+            })
+            .fail(function() {
+                alert( "error" );
+            })
+            .always(function() {
+                //alert( "finished" );
+            });
+        }
+
+        $(document).ready(function(){
+            time = {{ process.time }}*1000;
+            execute_script(time);
+        })
+    </script>
+{% else %}
+    <form action="." method="post">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-success" value="Ejecutar proceso">
+    </form>
+{% endif %}
+
+    <a href="/home/" class="btn btn-success">Regresar</a>
+
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block titulo %}
+	Listado de cuotas
+{% endblock titulo %}
+
+{% block content %}
+
+<table class="table table-hover table-bordered table-striped">
+	<tr>
+		<th>Cuota</th>
+		<th>Valor</th>
+		<th>Fecha</th>
+	</tr>
+	{% for d in descripcion_cuotas %}
+		<tr>
+			<td>Cuota {{d.0}}</td>
+			<td>$ {{d.1|intcomma}}</td>
+			<td>{{d.2|date:"d/m/Y" }}</td>
+		</tr>
+	{% endfor %}
+
+</table>
+
+<hr>
+
+<a href="/" class="btn btn-success">Regresar</a>
+
+	
+{% endblock content %}
