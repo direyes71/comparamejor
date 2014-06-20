@@ -1,4 +1,3 @@
-from django.core.cache import cache
 import random
 from django.http.response import HttpResponse
 from django.shortcuts import render
@@ -13,6 +12,8 @@ from app.models import Process
 from celery import group
 from app.tasks import execute_time_process
 from app.tasks import ask_super_market
+
+from app.tasks import *
 
 
 def home(request):
@@ -37,17 +38,18 @@ def status_process(request, process_id):
 
 def execute_exercise_2(request):
     if request.method == 'POST':
+        from datetime import datetime
         supermarkets = request.POST.getlist('supermarket')
         if supermarkets:
-            tasks_list = []
-            for supermarket in supermarkets:
-                tasks_list.append(ask_super_market.subtask(supermarket))
-            job = group(tasks_list)
-            result = job.apply_async()
-
+            print datetime.now()
+            result = group(ask_super_market.s(int(supermarket)) for supermarket in supermarkets).apply_async()
+            values = result.get()
+            less_value = None
+            for supermarket, value in values:
+                if less_value == None:
+                    less_value = {'supermarket': supermarket, 'value': value}
+                elif value < less_value['value']:
+                    less_value = {'supermarket': supermarket, 'value': value}
+            print less_value['value']
+            print datetime.now()
     return render_to_response("exercise_2.html", locals(), context_instance=RequestContext(request))
-    """
-    process = Process.objects.create(time=random.randint(1, 10))
-    execute_time_process.delay(process.id)
-    return render_to_response("execute_process.html", locals(), context_instance=RequestContext(request))
-    """

@@ -12,10 +12,17 @@ def execute_time_process(process_id):
     Process.objects.filter(id=process_id).update(status=2)
 
 
-VALUES_SUPER_MARKETS = {'exito': 1000, 'carulla': 1500, 'otro': 2000}
+EXITO = 1
+CARULLA = 2
+OXXO = 3
+SAO = 4
+JUMBO = 5
+
+VALUES_SUPER_MARKETS = {EXITO: 1000, CARULLA: 1500, OXXO: 200, SAO: 2500, JUMBO: 3000}
+
+SUPERMARKETS = ["EXITO", "CARULLA", "OXXO", "SAO", "JUMBO"]
 
 @task
 def ask_super_market(supermarket):
-    for tmp in range(1, 5):
-        time.sleep(1)
-    return VALUES_SUPER_MARKETS[supermarket]
+    time.sleep(5)
+    return (SUPERMARKETS[supermarket-1], VALUES_SUPER_MARKETS[supermarket])

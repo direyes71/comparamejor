@@ -8,6 +8,7 @@
 
     <link href="{{ STATIC_URL }}bootstrap3/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/smoothness/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
 
     <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}bootstrap3/js/bootstrap.min.js"></script>
@@ -34,6 +35,9 @@
           {% block content %}
             <ul>
               <li><a href="{% url 'execute_process' %}">Ejercicio 1</a></li>
+            </ul>
+            <ul>
+              <li><a href="{% url 'execute_exercise_2' %}">Ejercicio 2</a></li>
             </ul>
           {% endblock content %}
         </div>
