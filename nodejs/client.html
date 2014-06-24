@@ -1,0 +1,17 @@
+<script src="http://localhost:8086/socket.io/socket.io.js"></script>
+<script>
+io = io.connect()
+
+io.emit('connect');
+
+var randomnumber=Math.floor(Math.random()*11)
+alert(randomnumber);
+
+io.emit('register', {
+	process_id: randomnumber
+});
+
+io.on('result_process', function(data){
+	alert(data);
+});
+</script>

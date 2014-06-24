@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+	Ejercicio 2
+{% endblock titulo %}
+
+{% block content %}
+
+    <form action="." method="post">
+        <table>
+            <tr>
+                <td>Username</td>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="Entrar"></td>
+            </tr>
+        </table>
+    </form>
+
+    </br>
+    </br>
+
+    <label class="result"></label>
+
+    <button class="btn btn-success" id="instagram">Instagram</button>
+
+    <a href="/home/" class="btn btn-success back">Regresar</a>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        //https://instagram.com/oauth/authorize/?client_id=8848927b791649629538c5471281e8f3&redirect_uri=http://localhost:8000/exercise3/&response_type=code
+        //$.get("https://instagram.com/oauth/authorize/?client_id=8848927b791649629538c5471281e8f3&redirect_uri=http://localhost:8000/exercise3/&response_type=code")
+
+
+        $("#instagram").on("click", function(){
+            /*$.get( "https://instagram.com/oauth/authorize/?client_id=8848927b791649629538c5471281e8f3&redirect_uri=http://localhost:8000/exercise3/&response_type=code", function( data ) {
+                alert(data);
+                $( ".result" ).html( data );
+                alert( "Load was performed." );
+            });*/
+
+            //$.get( "https://instagram.com/oauth/authorize/", { client_id: "8848927b791649629538c5471281e8f3", redirect_uri: "http://localhost:8000/exercise3/", response_type: "code"} );
+
+
+
+
+
+            $.ajax({
+                type: 'GET',
+                dataType: 'jsonp',
+                data: {},
+                url: "https://instagram.com/oauth/authorize/?display=touch&client_id=8848927b791649629538c5471281e8f3&redirect_uri=http://localhost:8000/exercise3/&response_type=token",
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("fallo")
+                    console.log(jqXHR)
+                },
+                success: function (msg) {
+                    alert(msg)
+                    console.log(msg);
+                }
+            });
+
+
+
+            /*
+            $.get("https://instagram.com/oauth/authorize/?display=touch&client_id=8848927b791649629538c5471281e8f3&redirect_uri=http://localhost:8000/exercise3/&response_type=token", function(data){
+                alert(data);
+            })
+            */
+
+
+        })
+
+
+
+    </script>
+
+
+{% endblock content %}

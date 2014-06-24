@@ -8,44 +8,29 @@
 
 {% if process %}
 
+    {{ process.time }}
+
     <label id="mensaje"></label> <img src="{{ STATIC_URL }}ima/loading.gif" class="loading" id="loading">
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
+    <script src="http://localhost:8086/socket.io/socket.io.js"></script>
+
     <script type="text/javascript">
-
-        function execute_script (time) {
-            setTimeout(function(){status_process()}, time);
-        }
-
-        function status_process() {
-            var jqxhr = $.post( "/statusprocess/{{ process.id }}/", function(response) {
-                var response = $.parseJSON(response);
-                // El proceso ha finalizado
-                if(response.successful==1){
-                    $("#loading").hide();
-                    $("#mensaje").html("El proceso ha terminado");
-                } else {
-                    // El proceso no ha finalizado
-                    time_wait = response.remaining_time * 1000;
-                    return execute_script(time_wait);
-                }
-            })
-            .done(function() {
-                //alert( "second success" );
-            })
-            .fail(function() {
-                alert( "error" );
-            })
-            .always(function() {
-                //alert( "finished" );
-            });
-        }
-
-        $(document).ready(function(){
-            time = {{ process.time }}*1000;
-            execute_script(time);
-        })
+        // Connection to nodejs
+        var socket = io.connect('http://localhost:8086');
+        socket.emit('connect');
+        // Register process
+        socket.emit('register', {
+            process_id: {{ process.id }}
+        });
+        // Process result notification
+        socket.on('result_process', function(data){
+            if(data.successful==1){
+                $("#loading").hide();
+                $("#mensaje").html(data.msg);
+            }
+        });
     </script>
 {% else %}
     <form action="." method="post">
