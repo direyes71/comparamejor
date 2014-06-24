@@ -38,10 +38,24 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'app',
     'djcelery',
+    'provider',
+    'provider.oauth2',
 )
 
 import djcelery
 djcelery.setup_loader()
+
+CELERY_ANNOTATES = { "celery.chord_unlock": {"interval": 10} }
+BROKER_HEARTBEAT = 1
+CELERYBEAT_MAX_LOOP_INTERVAL = 1
+CELERY_SEND_EVENTS = True
+CELERY_SEND_TASK_SENT_EVENT = True
+
+CELERY_ANNOTATIONS = {
+    'celery.chord_unlock': {
+        'default_retry_delay': 1,
+    }
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -102,10 +116,3 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
-    }
-}
